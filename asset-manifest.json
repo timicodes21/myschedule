@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/myschedule/static/css/main.c24778fa.chunk.css",
+    "main.js": "/myschedule/static/js/main.53bd7e4d.chunk.js",
+    "main.js.map": "/myschedule/static/js/main.53bd7e4d.chunk.js.map",
+    "runtime-main.js": "/myschedule/static/js/runtime-main.183397e1.js",
+    "runtime-main.js.map": "/myschedule/static/js/runtime-main.183397e1.js.map",
+    "static/css/2.49d6b035.chunk.css": "/myschedule/static/css/2.49d6b035.chunk.css",
+    "static/js/2.b598a7b8.chunk.js": "/myschedule/static/js/2.b598a7b8.chunk.js",
+    "static/js/2.b598a7b8.chunk.js.map": "/myschedule/static/js/2.b598a7b8.chunk.js.map",
+    "static/js/3.f7b1f590.chunk.js": "/myschedule/static/js/3.f7b1f590.chunk.js",
+    "static/js/3.f7b1f590.chunk.js.map": "/myschedule/static/js/3.f7b1f590.chunk.js.map",
+    "index.html": "/myschedule/index.html",
+    "static/css/2.49d6b035.chunk.css.map": "/myschedule/static/css/2.49d6b035.chunk.css.map",
+    "static/css/main.c24778fa.chunk.css.map": "/myschedule/static/css/main.c24778fa.chunk.css.map",
+    "static/js/2.b598a7b8.chunk.js.LICENSE.txt": "/myschedule/static/js/2.b598a7b8.chunk.js.LICENSE.txt",
+    "static/media/calender.24c97401.png": "/myschedule/static/media/calender.24c97401.png",
+    "static/media/notebook.5720710a.png": "/myschedule/static/media/notebook.5720710a.png",
+    "static/media/profile.33e7df09.png": "/myschedule/static/media/profile.33e7df09.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.183397e1.js",
+    "static/css/2.49d6b035.chunk.css",
+    "static/js/2.b598a7b8.chunk.js",
+    "static/css/main.c24778fa.chunk.css",
+    "static/js/main.53bd7e4d.chunk.js"
+  ]
+}
