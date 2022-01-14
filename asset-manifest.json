@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/myschedule/static/css/main.42ff03f5.chunk.css",
-    "main.js": "/myschedule/static/js/main.0184d682.chunk.js",
-    "main.js.map": "/myschedule/static/js/main.0184d682.chunk.js.map",
+    "main.css": "/myschedule/static/css/main.686e3e1d.chunk.css",
+    "main.js": "/myschedule/static/js/main.35081ab4.chunk.js",
+    "main.js.map": "/myschedule/static/js/main.35081ab4.chunk.js.map",
     "runtime-main.js": "/myschedule/static/js/runtime-main.0da4448f.js",
     "runtime-main.js.map": "/myschedule/static/js/runtime-main.0da4448f.js.map",
     "static/css/2.49d6b035.chunk.css": "/myschedule/static/css/2.49d6b035.chunk.css",
@@ -12,7 +12,7 @@
     "static/js/3.d6633aed.chunk.js.map": "/myschedule/static/js/3.d6633aed.chunk.js.map",
     "index.html": "/myschedule/index.html",
     "static/css/2.49d6b035.chunk.css.map": "/myschedule/static/css/2.49d6b035.chunk.css.map",
-    "static/css/main.42ff03f5.chunk.css.map": "/myschedule/static/css/main.42ff03f5.chunk.css.map",
+    "static/css/main.686e3e1d.chunk.css.map": "/myschedule/static/css/main.686e3e1d.chunk.css.map",
     "static/js/2.efea714d.chunk.js.LICENSE.txt": "/myschedule/static/js/2.efea714d.chunk.js.LICENSE.txt",
     "static/media/calender.38817852.png": "/myschedule/static/media/calender.38817852.png",
     "static/media/calendergreen.bab80040.png": "/myschedule/static/media/calendergreen.bab80040.png",
@@ -28,7 +28,7 @@
     "static/js/runtime-main.0da4448f.js",
     "static/css/2.49d6b035.chunk.css",
     "static/js/2.efea714d.chunk.js",
-    "static/css/main.42ff03f5.chunk.css",
-    "static/js/main.0184d682.chunk.js"
+    "static/css/main.686e3e1d.chunk.css",
+    "static/js/main.35081ab4.chunk.js"
   ]
 }
