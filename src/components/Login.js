@@ -12,18 +12,6 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('')
 
-    useEffect(() => {
-        const localEmail = localStorage.getItem('email');
-        const localPassword = localStorage.getItem('password');
-        setUsername(localEmail);
-        setPassword(localPassword);
-
-        setTimeout(() => {
-            setUsername('');
-            setPassword('');
-        }, 10000)
-    }, [])
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if(username === 'timileyinbabalola42@gmail.com' && password === 'babalolatimileyin'){
