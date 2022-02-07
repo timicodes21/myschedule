@@ -14,12 +14,13 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(username === 'timileyinbabalola42@gmail.com' && password === 'babalolatimileyin'){
-            navigate('/home');
-        }
-        else{
-            setError("Incorrect username or password")
-        }
+        // if(username === 'timileyinbabalola42@gmail.com' && password === 'babalolatimileyin'){
+        //     navigate('/home');
+        // }
+        // else{
+        //     setError("Incorrect username or password")
+        // }
+        navigate('/home')
     }
 
     return (
