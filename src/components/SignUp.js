@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { Row, Form,  Button, Container, Image } from 'react-bootstrap'
+import { Row, Form,  Button, Container } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 import Navbar from './Navbar';
-import usePasswordShow from './usePasswordShow';
+import usePasswordShow from '../hooks/usePasswordShow';
 import { useNavigate } from 'react-router';
-import Spinner1 from '../images/spinner1.gif'
 
 const SignUp = () => {
     const { passwordShow, showPassword } = usePasswordShow();

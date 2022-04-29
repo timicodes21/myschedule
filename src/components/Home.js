@@ -1,12 +1,12 @@
 import React from 'react'
 import Navbar from './Navbar'
-import Sidebar from './Sidebar'
+import MainPage from './MainPage'
 
 const Home = () => {
     return (
         <div className="home">
             <Navbar />
-            <Sidebar />
+            <MainPage />
         </div>
     )
 }
