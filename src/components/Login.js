@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
 import { Button, Container, Row, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
@@ -8,19 +9,35 @@ import { useNavigate } from 'react-router';
 const Login = () => {
     const { passwordShow, showPassword } = usePasswordShow();
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = (e) => {
+        setLoading(true);
         e.preventDefault();
-        // if(username === 'timileyinbabalola42@gmail.com' && password === 'babalolatimileyin'){
-        //     navigate('/home');
-        // }
-        // else{
-        //     setError("Incorrect username or password")
-        // }
-        navigate('/home')
+        const config = {
+            headers:{
+                'Content-type': 'application/json; charset=UTF-8',
+            }
+        };
+        const url = 'https://myschedule-api.herokuapp.com/api/v1/auth/login';
+        const data = {
+            email, password
+        }
+        axios.post(url, data, config)
+            .then(res => {
+                setLoading(false)
+                localStorage.setItem("token", res.data.token);
+                console.log(res);
+                navigate('/home')
+            })
+            .catch(err => {
+                setLoading(false)
+                setError(err.response.data.msg)
+            })
+        
     }
 
     return (
@@ -42,8 +59,8 @@ const Login = () => {
                                 <div>
                                     <Form onSubmit={handleSubmit}>
                                         <Form.Group className="mb-3" controlId="formBasicEmail">
-                                            <Form.Label className="font-15">username or email</Form.Label>
-                                            <Form.Control type="email" placeholder="username" required value={username} onChange={e => setUsername(e.target.value)} />
+                                            <Form.Label className="font-15">email</Form.Label>
+                                            <Form.Control type="email" placeholder="email" required value={email} onChange={e => setEmail(e.target.value)} />
                                             <Form.Text className="text-muted">
                                             
                                             </Form.Text>
@@ -57,7 +74,7 @@ const Login = () => {
                                         </Form.Group>
                                         <p className="font-14 text-danger">{error}</p>
                                         <Button variant="success" type="submit" className="text-center w-100">
-                                            Login
+                                            {loading ? 'Logging in...' : 'Login' }
                                         </Button>
                                         <Link to="/signup">
                                             <Button variant="" className="text-center w-100 text-success border-1 border-success border-rounded my-3 hover">

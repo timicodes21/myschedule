@@ -16,9 +16,6 @@ import useLocalStorage from './useLocalStorage'
 
 
 const Sidebar = () => {
-    useEffect(() => {
-        handleProfile();
-    }, []) 
 
     const reminderRef = useRef(null);
     const notebookRef = useRef(null);
@@ -197,14 +194,12 @@ const Sidebar = () => {
     const changeDate = (e) => {
         setDateState(e)
         const now = new Date();
-        console.log(now.getTime(), dateState.getTime());
         if (dateState.getTime() === now.getTime()){
             console.log('hello there')
         }
     }
 
     const handleDisplay = (e) => {
-        console.log(window.scrollY)
         if(window.scrollY < 100){
             setDisplay(true);
         } else{

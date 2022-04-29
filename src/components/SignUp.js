@@ -1,21 +1,23 @@
-import React, {useState} from 'react'
-import { Row, Form,  Button, Container } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Row, Form,  Button, Container, Image } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import axios from 'axios';
 import Navbar from './Navbar';
 import usePasswordShow from './usePasswordShow';
 import { useNavigate } from 'react-router';
+import Spinner1 from '../images/spinner1.gif'
 
 const SignUp = () => {
     const { passwordShow, showPassword } = usePasswordShow();
     const navigate = useNavigate();
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('')
     const [match, setMatch] = useState(null)
     const [text, setText] = useState('')
-
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleMatch = () => {
         if(password === confirmPassword){
@@ -26,11 +28,31 @@ const SignUp = () => {
         }
     }
     const handleSubmit = (e) => {
+        setLoading(true)
         e.preventDefault();
-        navigate('/')
-        alert('account created')
-        localStorage.setItem('email', email);
-        localStorage.setItem('password', password)
+        const config = {
+            headers:{
+                'Content-type': 'application/json; charset=UTF-8',
+            }
+        };
+        const url = 'https://myschedule-api.herokuapp.com/api/v1/auth/register';
+        const data = {
+            name, email, password
+        }
+        axios.post(url, data, config)
+            .then(res => {
+                localStorage.setItem("token", res.data.token);
+                setLoading(false)
+                navigate('/')
+            })
+            .catch(err => {
+                setLoading(false)
+                if(err.response.data.msg === 'Duplicate valued entered for email field, please choose another value'){
+                    setError('User already exists')
+                }else{
+                    setError(err.response.data.msg)
+                }
+            })
     }
 
     return (
@@ -48,16 +70,13 @@ const SignUp = () => {
                             <div>
                                 <Form onSubmit={handleSubmit}>
                                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                                        <Form.Control type="text" placeholder="firstname" value={firstname} onChange={e => setFirstname(e.target.value)} required/>
-                                    </Form.Group>
-                                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                                        <Form.Control type="text" placeholder="lastname" value={lastname} onChange={e => setLastname(e.target.value)} required/>
+                                        <Form.Control type="text" placeholder="name" value={name} onChange={e => setName(e.target.value)} required/>
                                     </Form.Group>
                                     <Form.Group className="mb-3" controlId="formBasicEmail">
                                         <Form.Control type="email" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} required />
                                     </Form.Group>
                                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                                        <Form.Control type={passwordShow ? "text" : "password"} className="border-bottom" placeholder="password" value={password} onChange={e => setPassword(e.target.value)} required/>
+                                        <Form.Control type={passwordShow ? "text" : "password"} className="border-bottom" placeholder="password" value={password} onKeyUp={handleMatch} onChange={e => setPassword(e.target.value)} required/>
                                     </Form.Group>
                                     <Form.Group className="mb-3" controlId="formBasicPassword">
                                         <Form.Control type={passwordShow ? "text" : "password"} className="border-bottom" placeholder=" Confirm password" value={confirmPassword} onKeyUp={handleMatch} onChange={e => setConfirmPassword(e.target.value)} required/>
@@ -66,8 +85,9 @@ const SignUp = () => {
                                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                         <Form.Check type="checkbox" className="font-15" onClick={showPassword} label="show password" />
                                     </Form.Group>
-                                    <Button variant="success" type="submit" className="text-center w-100">
-                                        Sign Up
+                                    <p className="font-14 text-danger">{error}</p>
+                                    <Button disabled={match ? false : true} variant="success" type="submit" className="text-center w-100">
+                                        {loading ? 'Creating account...' : 'Sign Up' }
                                     </Button>                                
                                     <Link to="/">
                                         <Button variant="" className="text-center w-100 text-success border-1 border-success border-rounded my-3 hover">
