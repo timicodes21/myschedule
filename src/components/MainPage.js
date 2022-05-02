@@ -9,7 +9,6 @@ import profilegreen from '../images/profilegreen.png'
 import calendergreen from '../images/calendergreen.png'
 import notebookgreen from '../images/notebookgreen.png'
 import todolistgreen from '../images/todolistgreen.png'
-import 'react-calendar/dist/Calendar.css';
 import moment from 'moment'
 import useLocalStorage from '../hooks/useLocalStorage'
 import MobilePanel from './MobilePanel'
@@ -20,6 +19,7 @@ import Todolist from './Todolist'
 import CalenderPage from './CalenderPage'
 import NotebookPage from './NotebookPage'
 import ProfilePage from './ProfilePage'
+import axios from 'axios'
 
 const MainPage = () => {
 
@@ -53,11 +53,12 @@ const MainPage = () => {
     const [reminders, setReminders] = useLocalStorage("reminders", [
 
     ]);
-
+    const [noteData, setNoteData] = useState(null)
 
     const handleRef1 = () => {
         reminderRef.current.focus();
     }
+
     const handleRef2 = () => {
         notebookRef.current.focus();
     }
@@ -74,9 +75,26 @@ const MainPage = () => {
 
     const handleSubmitt = (e) => {
         e.preventDefault();
-        const nextId = notes.length > 0 ? Math.max(...notes.map(t => t.id)) + 1 : 0 
-        const newNote = {id: nextId, note: notebookk}
-        setNotes([...notes, newNote])
+        // const nextId = notes.length > 0 ? Math.max(...notes.map(t => t.id)) + 1 : 0 
+        // const newNote = {id: nextId, note: notebookk}
+        // setNotes([...notes, newNote])
+        const token = localStorage.getItem('token');
+        const config = {
+            headers:{
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        const url = 'https://myschedule-api.herokuapp.com/api/v1/notes';
+        const data = {
+            note: notebookk
+        }
+        axios.post(url, data, config)
+            .then(res => {
+                console.log(res);
+                const newNote = res.data.note;
+                setNoteData([...noteData, newNote])
+            })
         setNotebookk('')
     } 
 
@@ -99,8 +117,21 @@ const MainPage = () => {
     }
 
     const handleDeletee =  (e) => {
-        const newNotes = notes.filter((note) => note.id != e.target.id)
-        setNotes(newNotes)
+        const token = localStorage.getItem('token');
+        const config = {
+            headers:{
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        const url = `https://myschedule-api.herokuapp.com/api/v1/notes/${e.target.id}`;
+        const newNotes = noteData.filter((note) => note._id != e.target.id)
+        setNoteData(newNotes)
+        axios.delete(url, config)
+            .then(res => {
+                console.log(res);
+            })
+        setNotebookk('')
     }
 
     const handleDeleteee = (e) => {
@@ -108,7 +139,7 @@ const MainPage = () => {
         const newReminder = reminders.filter((reminder) => reminder.id != e.target.id)
         setReminders(newReminder)
     }
-    
+
     const handleAddtodo = () => {
         setProfileTodo(false)
         setAddtodo(true);
@@ -116,7 +147,7 @@ const MainPage = () => {
         setCalenderTodo(false)
         setNotebookTodo(false)
     }
-
+    
     const handleListtodo = () => {
         setProfileTodo(false)
         setAddtodo(false);
@@ -213,6 +244,7 @@ const MainPage = () => {
         }
     }
 
+    // handleProfile();
     window.addEventListener('scroll', handleDisplay)
 
     return (
@@ -232,7 +264,7 @@ const MainPage = () => {
 
                         <CalenderPage calenderTodo={calenderTodo} dateState={dateState} changeDate={changeDate} handleSubmittt={handleSubmittt} reminder={reminder} setReminder={setReminder} reminderRef={reminderRef} reminders={reminders} handleRef1={handleRef1} delete1={delete1} handleDeleteee={handleDeleteee} />
                         
-                        <NotebookPage notebookTodo={notebookTodo} handleSubmitt={handleSubmitt} notebookk={notebookk} setNotebookk={setNotebookk} notebookRef={notebookRef} notes={notes} handleRef2={handleRef2} delete1={delete1} handleDeletee={handleDeletee} />
+                        <NotebookPage notebookTodo={notebookTodo} handleSubmitt={handleSubmitt} notebookk={notebookk} setNotebookk={setNotebookk} notebookRef={notebookRef} notes={notes} handleRef2={handleRef2} delete1={delete1} handleDeletee={handleDeletee} noteData={noteData} setNoteData={setNoteData} />
 
                         <ProfilePage profileTodo={profileTodo} todolists={todolists} handleTodolist={handleTodolist} delete1={delete1} handleDelete={handleDelete} notes={notes} handleNotebook={handleNotebook} handleDeletee={handleDeletee} reminders={reminders} handleCalender={handleCalender} handleDeleteee={handleDeleteee} />
                     </Col>
