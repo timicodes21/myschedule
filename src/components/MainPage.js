@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react'
-import { Container, Image, Row, Col, Form, Button, FloatingLabel } from 'react-bootstrap'
+import React, { useState, useRef, useEffect } from 'react'
+import { Container, Row, Col } from 'react-bootstrap'
 import profile1 from '../images/profile.png'
 import calender1 from '../images/calender.png'
 import notebook1 from '../images/notebook.png'
@@ -9,8 +9,6 @@ import profilegreen from '../images/profilegreen.png'
 import calendergreen from '../images/calendergreen.png'
 import notebookgreen from '../images/notebookgreen.png'
 import todolistgreen from '../images/todolistgreen.png'
-import moment from 'moment'
-import useLocalStorage from '../hooks/useLocalStorage'
 import MobilePanel from './MobilePanel'
 import SidebarDesktop from './SidebarDesktop'
 import MidPage from './MidPage'
@@ -44,16 +42,13 @@ const MainPage = () => {
     const [day, setDay] = useState('Sunday')
     const [notebookk, setNotebookk] = useState('')
     const [dateState, setDateState] = useState(new Date())
-    const [todolists, setTodolists] = useLocalStorage("todos", [
-        
-    ]);
-    const [notes, setNotes] = useLocalStorage("notes", [
-        
-    ])
-    const [reminders, setReminders] = useLocalStorage("reminders", [
-
-    ]);
     const [noteData, setNoteData] = useState(null)
+    const [calenderData, setCalenderData] = useState(null);
+    const [todoData, setTodoData] = useState(null);
+
+    useEffect(() => {
+        handleProfile()
+    }, [])
 
     const handleRef1 = () => {
         reminderRef.current.focus();
@@ -65,19 +60,28 @@ const MainPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const nextId = todolists.length > 0 ? Math.max(...todolists.map(t => t.id)) + 1 : 0 
-        const newTodo = {id: nextId, note, day}
-        setTodolists([...todolists, newTodo])
-        handleListtodo();
+        const token = localStorage.getItem('token');
+        const config = {
+            headers:{
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        const url = 'https://myschedule-api.herokuapp.com/api/v1/tasks';
+        const data = {
+            task: note
+        }
+        axios.post(url, data, config)
+            .then(res => {
+                const newTask = res.data.task;
+                setTodoData([...todoData, newTask])
+                handleListtodo()
+            })
         setNote('')
-        setDay('')
     }
 
     const handleSubmitt = (e) => {
         e.preventDefault();
-        // const nextId = notes.length > 0 ? Math.max(...notes.map(t => t.id)) + 1 : 0 
-        // const newNote = {id: nextId, note: notebookk}
-        // setNotes([...notes, newNote])
         const token = localStorage.getItem('token');
         const config = {
             headers:{
@@ -91,7 +95,6 @@ const MainPage = () => {
         }
         axios.post(url, data, config)
             .then(res => {
-                console.log(res);
                 const newNote = res.data.note;
                 setNoteData([...noteData, newNote])
             })
@@ -100,20 +103,41 @@ const MainPage = () => {
 
     const handleSubmittt = (e) => {
         e.preventDefault();
-        const nextId = reminders.length > 0 ? Math.max(...reminders.map(t => t.id)) + 1 : 0 
-        const newReminder = {id: nextId, date: moment(dateState).format('Do MMMM YYYY'), remind: reminder}
-        setReminders([...reminders, newReminder]);
+        const token = localStorage.getItem('token');
+        const config = {
+            headers:{
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        const url = 'https://myschedule-api.herokuapp.com/api/v1/reminders';
+        const data = {
+            name: reminder,
+            date: dateState
+        }
+        axios.post(url, data, config)
+            .then(res => {
+                const newReminder = res.data.reminder;
+                setCalenderData([...calenderData, newReminder])
+            })
         setReminder('')
     }
-    
-    const refreshPage = () => {
-        window.location.reload();
-    }
-
 
     const handleDelete =  (e) => {
-        const newTodos = todolists.filter((todo) => todo.id != e.target.id)
-        setTodolists(newTodos)
+        const token = localStorage.getItem('token');
+        const config = {
+            headers:{
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        const url = `https://myschedule-api.herokuapp.com/api/v1/tasks/${e.target.id}`;
+        const newTasks = todoData.filter((task) => task._id != e.target.id)
+        setTodoData(newTasks)
+        axios.delete(url, config)
+            .then(res => {
+                
+            })
     }
 
     const handleDeletee =  (e) => {
@@ -129,15 +153,25 @@ const MainPage = () => {
         setNoteData(newNotes)
         axios.delete(url, config)
             .then(res => {
-                console.log(res);
+                
             })
-        setNotebookk('')
     }
 
     const handleDeleteee = (e) => {
-        console.log(e.target.id)
-        const newReminder = reminders.filter((reminder) => reminder.id != e.target.id)
-        setReminders(newReminder)
+        const token = localStorage.getItem('token');
+        const config = {
+            headers:{
+                'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        const url = `https://myschedule-api.herokuapp.com/api/v1/reminders/${e.target.id}`;
+        const newReminders = calenderData.filter(reminder => reminder._id != e.target.id)
+        setCalenderData(newReminders);
+        axios.delete(url, config)
+            .then(res => {
+                
+            })
     }
 
     const handleAddtodo = () => {
@@ -230,10 +264,6 @@ const MainPage = () => {
 
     const changeDate = (e) => {
         setDateState(e)
-        const now = new Date();
-        if (dateState.getTime() === now.getTime()){
-            console.log('hello there')
-        }
     }
 
     const handleDisplay = (e) => {
@@ -260,13 +290,13 @@ const MainPage = () => {
                     <Col xs={12} sm={6} md={8} lg={8} className="py-md-1 ps-md-2 py-3 shadow-sm">
                         <CreateTodolist addtodo={addtodo} handleSubmit={handleSubmit} note={note} day={day} setNote={setNote} setDay={setDay} />
 
-                        <Todolist listtodo={listtodo} todolists={todolists} handleAddtodo={handleAddtodo} delete1={delete1} handleDelete={handleDelete} />
+                        <Todolist listtodo={listtodo} handleAddtodo={handleAddtodo} delete1={delete1} handleDelete={handleDelete} todoData={todoData} setTodoData={setTodoData} />
 
-                        <CalenderPage calenderTodo={calenderTodo} dateState={dateState} changeDate={changeDate} handleSubmittt={handleSubmittt} reminder={reminder} setReminder={setReminder} reminderRef={reminderRef} reminders={reminders} handleRef1={handleRef1} delete1={delete1} handleDeleteee={handleDeleteee} />
+                        <CalenderPage calenderTodo={calenderTodo} dateState={dateState} changeDate={changeDate} handleSubmittt={handleSubmittt} reminder={reminder} setReminder={setReminder} reminderRef={reminderRef} handleRef1={handleRef1} delete1={delete1} handleDeleteee={handleDeleteee} calenderData={calenderData} setCalenderData={setCalenderData} />
                         
-                        <NotebookPage notebookTodo={notebookTodo} handleSubmitt={handleSubmitt} notebookk={notebookk} setNotebookk={setNotebookk} notebookRef={notebookRef} notes={notes} handleRef2={handleRef2} delete1={delete1} handleDeletee={handleDeletee} noteData={noteData} setNoteData={setNoteData} />
+                        <NotebookPage notebookTodo={notebookTodo} handleSubmitt={handleSubmitt} notebookk={notebookk} setNotebookk={setNotebookk} notebookRef={notebookRef} handleRef2={handleRef2} delete1={delete1} handleDeletee={handleDeletee} noteData={noteData} setNoteData={setNoteData} />
 
-                        <ProfilePage profileTodo={profileTodo} todolists={todolists} handleTodolist={handleTodolist} delete1={delete1} handleDelete={handleDelete} notes={notes} handleNotebook={handleNotebook} handleDeletee={handleDeletee} reminders={reminders} handleCalender={handleCalender} handleDeleteee={handleDeleteee} />
+                        <ProfilePage profileTodo={profileTodo} todoData={todoData} handleTodolist={handleTodolist} delete1={delete1} handleDelete={handleDelete} noteData={noteData} handleNotebook={handleNotebook} handleDeletee={handleDeletee} calenderData={calenderData} handleCalender={handleCalender} handleDeleteee={handleDeleteee} />
                     </Col>
                 </Row>
             </Container>
